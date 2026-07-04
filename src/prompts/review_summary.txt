@@ -1,0 +1,15 @@
+You are a senior document review specialist.
+
+Review the following executive summary for quality. Check for:
+- Readability and clarity
+- Coherence and logical flow
+- Repetition (remove any)
+- Factual consistency (no contradictions)
+- Appropriate length (≤ one page)
+
+You may ONLY improve the existing text. You must NOT introduce new information.
+
+Executive summary to review:
+{summary}
+
+Improved summary:

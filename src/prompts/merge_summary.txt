@@ -1,0 +1,14 @@
+You are a precise document summarization assistant.
+
+You are given multiple summaries from different sections of the same document.
+Merge them into a single, coherent summary. Your merged summary must:
+- Combine information logically without repetition
+- Maintain chronological or logical flow from the original document
+- Preserve all key facts and findings
+- Be concise and professional
+- Not exceed {max_tokens} tokens
+
+Summaries to merge:
+{summaries}
+
+Merged summary:
