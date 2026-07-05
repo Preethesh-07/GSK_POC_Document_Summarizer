@@ -2,6 +2,10 @@ import asyncio
 import os
 import sys
 
+from dotenv import load_dotenv
+# Load environment variables from .env into os.environ before LangChain initializes
+load_dotenv()
+
 from src.graph.workflow import compile_workflow
 
 

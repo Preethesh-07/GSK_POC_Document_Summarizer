@@ -6,7 +6,7 @@ Tables are auto-created on first use — no manual migration needed.
 """
 
 from langchain_core.documents import Document
-from langchain_postgres import PGVectorStore
+from langchain_postgres import PGVector
 
 from src.config.settings import settings
 from src.rag.embeddings import get_embedding_model
@@ -16,7 +16,7 @@ logger = get_logger(__name__)
 
 
 class VectorStoreManager:
-    """Manages embedding storage and retrieval via PGVectorStore."""
+    """Manages embedding storage and retrieval via PGVector."""
 
     def __init__(self):
         # Convert connection string to psycopg3 format
@@ -28,20 +28,20 @@ class VectorStoreManager:
 
         self._connection = connection
         self._embeddings = get_embedding_model()
-        self._store: PGVectorStore | None = None
+        self._store: PGVector | None = None
 
     @property
-    def store(self) -> PGVectorStore:
+    def store(self) -> PGVector:
         """Lazy initialization of the vector store."""
         if self._store is None:
-            logger.info("Initializing PGVectorStore connection...")
-            self._store = PGVectorStore(
+            logger.info("Initializing PGVector connection...")
+            self._store = PGVector(
                 connection=self._connection,
                 embeddings=self._embeddings,
                 collection_name="document_chunks",
                 use_jsonb=True,
             )
-            logger.info("PGVectorStore initialized successfully")
+            logger.info("PGVector initialized successfully")
         return self._store
 
     def store_chunks(

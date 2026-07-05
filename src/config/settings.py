@@ -39,9 +39,9 @@ class Settings(BaseSettings):
     min_text_length: int = 100
 
     # ── Observability ─────────────────────────────────────────────────
-    langsmith_api_key: str = Field(..., alias="LANGSMITH_API_KEY")
+    langsmith_api_key: str = Field(..., alias="LANGCHAIN_API_KEY")
     langsmith_project: str = Field(
-        default="GSK document summarizer", alias="LANGSMITH_PROJECT"
+        default="GSK document summarizer", alias="LANGCHAIN_PROJECT"
     )
 
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8", "extra": "ignore"}
