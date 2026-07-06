@@ -43,36 +43,42 @@ async def input_guardrails(state: GraphState) -> dict:
 
 
 async def ingest_document(state: GraphState) -> dict:
-    """Node 2: Load PDF and clean text."""
+    """Node 2: Load PDF and extract semantic chunks using Unstructured."""
     logger.info("Executing node: ingest_document")
     
     loader = PDFLoader()
-    pages = loader.load(state["pdf_path"])
+    # Loader now returns pre-chunked semantic documents
+    semantic_chunks = loader.load(state["pdf_path"])
     
-    cleaner = TextCleaner()
-    # Note: Guardrails already extracted some text, but we use the formal
-    # cleaner here to handle headers/footers properly.
-    cleaned = cleaner.clean(pages)
-    
+    # We bypass the old TextCleaner because Unstructured handles headers/footers
     return {
-        "raw_pages": pages,
-        "cleaned_text": cleaned,
+        "raw_pages": semantic_chunks,  # Storing the semantic chunks here temporarily
         "processing_status": "processing",
     }
 
 
 async def chunk_document(state: GraphState) -> dict:
-    """Node 3: Split cleaned text into chunks."""
+    """Node 3: Format semantic chunks into internal schema."""
     logger.info("Executing node: chunk_document")
     
-    chunker = DocumentChunker()
-    chunks = chunker.chunk(state["cleaned_text"], state["document_id"])
-    
-    if not chunks:
+    semantic_docs = state.get("raw_pages", [])
+    if not semantic_docs:
         return {
             "processing_status": "failed",
-            "errors": ["Failed to generate any chunks from the document"],
+            "errors": ["Failed to extract semantic chunks from the document"],
         }
+
+    chunks = []
+    for i, doc in enumerate(semantic_docs):
+        # Unstructured provides rich metadata, including page numbers
+        chunk = {
+            "id": f"{state['document_id']}_chunk_{i}",
+            "index": i,
+            "page": doc.metadata.get("page_number", -1),
+            "token_estimate": len(doc.page_content) // 4,
+            "text": doc.page_content,
+        }
+        chunks.append(chunk)
         
     return {"chunks": chunks}
 

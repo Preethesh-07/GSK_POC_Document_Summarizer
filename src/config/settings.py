@@ -16,6 +16,7 @@ class Settings(BaseSettings):
     groq_api: str = Field(..., alias="GROQ_API")
     gemini_api_key: str = Field(..., alias="GEMINI_API_KEY")
     postgres_url: str = Field(..., alias="POSTGRES_URL")
+    unstructured_api_key: str = Field(default="", alias="UNSTRUCTURED_API_KEY")
 
     # ── LLM Config ────────────────────────────────────────────────────
     llm_model: str = "openai/gpt-oss-120b"
@@ -26,8 +27,10 @@ class Settings(BaseSettings):
     embedding_model: str = "gemini-embedding-001"
 
     # ── Chunking Config ───────────────────────────────────────────────
-    chunk_size: int = 2000
-    chunk_overlap: int = 200
+    chunk_size: int = 4000
+    chunk_overlap: int = 400
+    new_after_n_chars: int = 3800
+    combine_under_n_chars: int = 1000
 
     # ── Summarization Config ──────────────────────────────────────────
     merge_batch_size: int = 5
