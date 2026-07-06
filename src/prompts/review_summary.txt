@@ -7,9 +7,12 @@ Review the following executive summary for quality. Check for:
 - Factual consistency (no contradictions)
 - Appropriate length (≤ one page)
 
-You may ONLY improve the existing text. You must NOT introduce new information.
+CRITICAL INSTRUCTIONS:
+- You must PRESERVE and ENHANCE the structural formatting of the document.
+- Use appropriate Markdown formatting (e.g., ## Headers, **bold text**, and bullet points) to make the output highly structured and readable. 
+- You may ONLY improve the existing text. You must NOT introduce new information.
 
 Executive summary to review:
 {summary}
 
-Improved summary:
+Improved structured summary:

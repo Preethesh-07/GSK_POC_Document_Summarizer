@@ -19,7 +19,7 @@ class Settings(BaseSettings):
     unstructured_api_key: str = Field(default="", alias="UNSTRUCTURED_API_KEY")
 
     # ── LLM Config ────────────────────────────────────────────────────
-    llm_model: str = "openai/gpt-oss-120b"
+    llm_model: str = "llama-3.3-70b-versatile"
     llm_temperature: float = 0.3
     llm_max_retries: int = 3
 

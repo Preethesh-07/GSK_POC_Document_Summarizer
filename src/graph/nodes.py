@@ -125,7 +125,7 @@ async def hierarchical_merge(state: GraphState) -> dict:
         return {}
 
     try:
-        llm = get_llm()
+        llm = get_llm(model="openai/gpt-oss-120b")
         merger = HierarchicalMerger(llm)
         merged = await merger.merge(state["chunk_summaries"])
         return {"merged_summary": merged}
@@ -159,7 +159,7 @@ async def review_summary(state: GraphState) -> dict:
         return {}
 
     try:
-        llm = get_llm()
+        llm = get_llm(model="openai/gpt-oss-120b")
         reviewer = ReviewAgent(llm)
         polished = await reviewer.review(state["final_summary"])
         
