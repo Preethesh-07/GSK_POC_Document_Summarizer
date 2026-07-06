@@ -64,17 +64,27 @@ async def _summarize_with_model(inputs: dict, model_name: str) -> str:
     return await summarizer.summarize_chunk(chunk_data)
 
 
-# LangSmith evaluate() expects synchronous functions, so we wrap the async calls
+# LangSmith evaluate() expects synchronous functions, so we wrap the async calls.
+# We also add a small sleep to allow httpx sockets to close cleanly and avoid
+# "Event loop is closed" errors.
+def _run_sync(model_name: str, inputs: dict) -> dict:
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    try:
+        result = loop.run_until_complete(_summarize_with_model(inputs, model_name))
+        # Give httpx connection pools a moment to close background tasks
+        loop.run_until_complete(asyncio.sleep(0.05))
+        return {"summary": result}
+    finally:
+        loop.close()
+
 def run_llama(inputs: dict):
     """Run summarization with Llama 3.3 70B."""
-    result = asyncio.run(_summarize_with_model(inputs, "llama-3.3-70b-versatile"))
-    return {"summary": result}
-
+    return _run_sync("llama-3.3-70b-versatile", inputs)
 
 def run_gpt_oss(inputs: dict):
     """Run summarization with OpenAI GPT-OSS 120B."""
-    result = asyncio.run(_summarize_with_model(inputs, "openai/gpt-oss-120b"))
-    return {"summary": result}
+    return _run_sync("openai/gpt-oss-120b", inputs)
 
 
 if __name__ == "__main__":
